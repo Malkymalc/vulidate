@@ -1,7 +1,4 @@
-Vue.use(vuelidate.default)
-
-const pizzaOrBurger = value => value === 'pizza' || value === 'burger' || !validators.helpers.req(value)
-const oldEnoughAndAlive = validators.between(12, 120)
+Vue.use(vuelidate.default);
 
 new Vue({
   el: '#app',
@@ -10,11 +7,7 @@ new Vue({
     return {
       form: {
         name: null,
-        age: null,
-        email: null,
-        newsletter: null,
-        githubUsername: null,
-        food: null
+        age: null
       }
     }
   },
@@ -24,46 +17,38 @@ new Vue({
       name: {
         required: validators.required
       },
-
       age: {
         required: validators.required, // $v.form.age.required
         integer: validators.integer, // $v.form.age.integer
-        oldEnoughAndAlive // $v.form.age.oldEnoughAndAlive
-      },
-
-      email: {
-        email: validators.email,
-        required: validators.requiredIf(function () {
-          return !!this.form.newsletter
-        })
-      },
-
-      githubUsername: {
-        exists (value) {
-          if (!validators.helpers.req(value)) {
-            return true
-          }
-          return axios.get(`//api.github.com/users/${value}`)
-        }
-      },
-
-      food: {
-        pizzaOrBurger
+        // min: validators.minValue(12),
+        // max: validators.maxValue(120),
+        between: validators.between(12, 120) //$v.form.age.between
       }
     }
   },
 
+  // computed: {
+  //   nameIsValid () {
+  //     return !!this.form.name
+  //   },
+  //
+  //   ageIsValid () {
+  //     return typeof this.form.age === 'number' && this.form.age > 12 && this.form.age < 120
+  //   },
+  //
+  //   formIsValid () {
+  //     return this.nameIsValid && this.ageIsValid
+  //   }
+  // },
+
   methods: {
-    shouldAppendValidClass (field) { // ex: field = $v.form.email
-      return !field.$invalid && field.$model && field.$dirty
-    },
-
-    shouldAppendErrorClass (field) { // ex: field = $v.form.email
-      return field.$error
-    },
-
     submitForm () {
-      this.$v.form.$touch()
+
+      // const nameIsValid = !!this.form.name;
+      // const ageIsValid = typeof this.form.age === 'Number' && this.form.age > 12 && this.form.age < 120;
+      //
+      // const formIsValid = nameIsValid && ageIsValid;
+
       if (!this.$v.form.$invalid) {
         console.log('📝 Form Submitted', this.form)
       } else {
